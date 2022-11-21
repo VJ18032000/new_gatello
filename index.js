@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const url = "mongodb://localhost/test"
+const url = "mongodb://localhost/gatello"
 
 const app = express()
 const bodyParser=require('body-parser')
@@ -29,4 +29,4 @@ app.use('/',CommentRoute)
 app.use('/',StatusRoute)
 app.use('/',LikeRoute)
 
-app.listen(4000, () => console.log('server connection...4000'))
+app.listen(2000, () => console.log('server connection...2000'))

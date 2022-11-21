@@ -11,22 +11,33 @@ const createStatus = (req, res, next) => {
     if (req.file) {
         post.status_post = req.file.path
     }
-    if(post.status_text||post.status_post){
+    console.log(post.status_post)
+    if(post.status_text || post.status_post){
         post.save()
         .then(status => {
             const resdata = {
                 "status": "OK",
                 "message": "create status successfully",
-                "result": `${status}`
+                "result": status
             }
             res.json(resdata)
         })
         .catch(err => {
-            res.json({ err })
+            const resdata = {
+                "status": "ERROR",
+                "message": "Something went wrong",
+                "result":"{}",
+                "error": err
+            }
+            res.json(resdata)
         })
     }else{
-        res.json("please insert post")
-        console.log("please insert post")
+        const resdata = {
+            "status": "ERROR",
+            "message": "Please insert correctly",
+            "result":"{}"
+        }
+        res.json(resdata)
     }
 }
 
@@ -37,10 +48,21 @@ const deletelStatus = (req, res, next) => {
     Status.findOneAndRemove({$and :[{_id:id},{user_id:user_id}]})
     .then(status=>{
         status.remove()
-       res.send({message:"status deleted successfull"})
+        const resdata = {
+            "status": "OK",
+            "message": "status deleted successfully",
+            "result": status
+        }
+        res.json(resdata)
    })
    .catch(err=>{
-       res.json(`please enter valid id ${err}`)
+    const resdata = {
+        "status": "ERROR",
+        "message": "Please enter valid id",
+        "result":"{}",
+        "error": err
+    }
+    res.json(resdata)
    })
 }
 
@@ -67,17 +89,26 @@ const userviewStatus = (req, res, next) => {
                 }
                 res.json(resdata)
             }
-            if (status.view_details.indexOf(id) !== -1) {
-                console.log("already Viewed")
-            } else {
-                status.view_details.push(id)
-                status.save()
-                console.log("successfully Viewed")
-            }
+            status.view_details.push(id)
+            status.save()
+            console.log("successfully Viewed")
+            // if (status.view_details.indexOf(id) !== -1) {
+            //     console.log("already Viewed")
+            // } else {
+            //     status.view_details.push(id)
+            //     status.save()
+            //     console.log("successfully Viewed")
+            // }
         })
         .catch(err => {
-            res.json({ err })
-        })
+            const resdata = {
+                "status": "ERROR",
+                "message": "Something went wrong",
+                "result":"{}",
+                "error": err
+            }
+            res.json(resdata)
+           })
 
 }
 
@@ -86,25 +117,30 @@ const allstatusDetails=(req,res,next)=>{
     .then(status=>{
         const resdata = {
             "status": "OK",
-            "message": "All status successfully",
+            "message": "All status viewed successfully",
             "data": status
         }
-        res.json(status)
+        res.json(resdata)
     })
     .catch(err => {
-        res.json({ err })
-    })
+        const resdata = {
+            "status": "ERROR",
+            "message": "Something went wrong",
+            "result":"{}",
+            "error": err
+        }
+        res.json(resdata)
+       })
 }
 
 const statusDeails=(req,res,next)=>{
     var id = req.body.user_id
-
     Status.find({ user_id: id })
     .then(status=>{
         if(status!=0){
             const resdata = {
                 "status": "OK",
-                "message": "Status successfully send", 
+                "message": "Status successfully Viewed", 
                 "result": status
             }
             res.json(resdata)
@@ -112,14 +148,19 @@ const statusDeails=(req,res,next)=>{
             const resdata = {
                 "status": "ERROR",
                 "message": "Please Enter Valid Userid",
-              
             }
             res.json(resdata)
         }
        
     })
     .catch(err => {
-        res.json({ err })
+        const resdata = {
+            "status": "ERROR",
+            "message": "Something went wrong",
+            "result":"{}",
+            "error": err
+        }
+        res.json(resdata)
     })
 }
 
