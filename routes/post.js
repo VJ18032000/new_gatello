@@ -5,8 +5,8 @@ const upload = require('../middleware/postUpload')
 
 router.post('/create/post/',upload.single('posts'),postController.createPost)
 router.delete('/delete/post',postController.deletePost)
-router.put('/edit/post',postController.editPost)
-router.get('/details/post/',postController.details)
-router.get('/list/myfeeds',postController.listMyfeed)
+router.post('/edit/post',postController.editPost)
+router.post('/details/post/',postController.details)
+router.post('/list/myfeeds',postController.listMyfeed)
 
 module.exports = router;

@@ -12,7 +12,12 @@ const userSchema = new mongoose.Schema({
     profile_url: {
         type: String,
         required: false,
-        default:null
+        default:""
+    },
+    cover_url: {
+        type: String,
+        required: false,
+        default:""
     },
     phone: {
         type: String,
@@ -21,52 +26,52 @@ const userSchema = new mongoose.Schema({
     dob: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     designation: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     city: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     company: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     job: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     college: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     high_school: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     interest: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     relationship_status: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     about: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     member: {
         type: String,
@@ -91,7 +96,8 @@ const userSchema = new mongoose.Schema({
     },
     my_feeds: {
         type: Array,
-        required: false
+        required: false,
+        default:""
     },
     following_count: {
         type: Number,
@@ -121,42 +127,54 @@ const userSchema = new mongoose.Schema({
     notification_token:{
         type: String,
         required: false,
-        default:" "
+        default:""
     },
     gender: {
         type: String,
         required: false,
-        default:null
+        default:""
     },
     language_known: {
         type: Array,
-        required: false
+        required: false,
+        default:""
     },
     website: {
-        type: String,
+        type: Array,
         required: false,
-        default:null
+        default:""
     },
     work_experience: [{
         companyName: {
             type: String,
             required: false,
-            default:null
+            default:""
+        },
+        location: {
+            type: String,
+            required: false,
+            default:""
+        },
+        position: {
+            type: String,
+            required: false,
+            default:""
         },
         startDate: {
             type: String,
             required: false,
-            default:null
+            default:""
         },
         endDate: {
             type: String,
             required: false,
-            default:null
+            default:""
         }
     }],
     skills: {
         type: Array,
         required: false,
+        default:""
     },
 
 })

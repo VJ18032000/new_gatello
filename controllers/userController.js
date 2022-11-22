@@ -45,7 +45,7 @@ const register = (req, res, next) => {
         })
         .catch(err => {
             const resdata = {
-                "status": "OK",
+                "status": "ERROR",
                 "message": "",
                 "result": {},
                 "errors": {
@@ -109,7 +109,7 @@ const logout = (req, res, next) => {
             if (user) {
                 const resdata = {
                     "status": "OK",
-                    "message": "user logged out",
+                    "message": "user logged out successfully",
                     "result": {},
                     "errors": {}
                 }
@@ -117,7 +117,13 @@ const logout = (req, res, next) => {
                 user.save()
                 res.send(resdata)
             } else {
-                res.send({ message: "Please check User id" })
+                const resdata = {
+                    "status": "ERROR",
+                    "message": "something went wrong",
+                    "result": {},
+                    "errors": {}
+                }
+                res.send(resdata)
             }
         })
 }
@@ -138,7 +144,13 @@ const forgotpassword = (req, res, next) => {
                 }
                 res.send(resdata)
             }else{
-                res.send({ message: "Please check User id & change password" })  
+                const resdata = {
+                    "status": "ERROR",
+                    "message": "Please check User id & change password",
+                    "result": {},
+                    "errors": {}
+                }
+                res.send(resdata)  
             }
         })
 }
@@ -149,7 +161,9 @@ const editprofile=(req,res,next)=>{
         work_experience:req.body.work_experience,
         companyName:req.body.companyName,
         startDate:req.body.startDate,
-        endDate:req.body.endDate
+        endDate:req.body.endDate,
+        location:req.body.location,
+        position:req.body.position
     }
     const user={ 
         name:req.body.name,
@@ -177,11 +191,17 @@ const editprofile=(req,res,next)=>{
         const resdata={
             "status": "OK",
             "message": "profile details updated successfully",
-            "result": {},
+            "result": {result},
             "error": {}
         }
         res.send(resdata)
     }).catch(err=>{
+        const resdata={
+            "status": "ERROR",
+            "message": "Something went wrong",
+            "result": {},
+            "error": {err}
+        }
         res.send(err)
     })
 }
@@ -204,7 +224,13 @@ const userdetails=(req,res,next)=>{
      res.json(resdata)
     })
     .catch(err=>{
-        res.json({err})
+        const resdata = {
+            "status": "ERROR",
+            "message": "Something went wrong",
+            "result": {},
+            "errors": {}
+        }
+        res.send(resdata) 
     })
 }
 
@@ -222,9 +248,15 @@ const updateuser=(req,res,next)=>{
                 "result": {},
                 "error": {}
             }
-             res.send(resdata)
+             res.json(resdata)
          }else{
-             res.send({ message: "Please check User id & change password" })  
+            const resdata = {
+                "status": "ERROR",
+                "message": "Something went wrong",
+                "result": {},
+                "errors": {}
+            }
+            res.json(resdata) 
          }
      })
 }
@@ -235,10 +267,22 @@ const updateimage=(req,res,next)=>{
     .then(user=>{
         user.profile_url=req.file.path
         user.save()
-        res.send({message:"successfully updated profile picture"})
+        const resdata = {
+            "status": "OK",
+            "message": "Successfully updated profile picture",
+            "result": user.profile_url,
+            "errors": {}
+        }
+        res.send(resdata) 
 
     }).catch(err=>{
-        res.send({message:"something is error...!"})
+        const resdata = {
+            "status": "ERROR",
+            "message": "Something went wrong",
+            "result": {err},
+            "errors": {}
+        }
+        res.send(resdata) 
     })  
 }
 
@@ -249,7 +293,6 @@ const verifyUser=(req,res,next)=>{
 
     User.findOne()
     .then(data=>{
-
     if(data.username===username && data.email===email && data.phone===phone){
         const resdata= {
             "status": "ERROR",
@@ -318,6 +361,66 @@ const verifyUser=(req,res,next)=>{
     }).catch(err=>res.json(err))
 }
 
+const coverimage=(req,res,next)=>{
+    const user_id=req.body.user_id
+    User.findOne({user_id:user_id})
+    .then(user=>{
+        user.cover_url=req.file.path
+        user.save()
+        const resdata = {
+            "status": "OK",
+            "message": "Successfully updated cover_url",
+            "result": user.cover_url,
+            "errors": {}
+        }
+        res.send(resdata) 
+    }).catch(err=>{
+        const resdata = {
+            "status": "OK",
+            "message": "Something is error...!",
+            "result": {},
+            "errors": err
+        }
+        res.send(resdata) 
+    }) 
+}
+const database=(req,res,next)=>{
+    User.find()
+    .then(status=>{
+        const resdata = {
+            "status": "OK",
+            "message": "All data in database",
+            "data": status
+        }
+        res.json(status)
+    })
+    .catch(err => {
+        res.json({ err })
+    })
+}
+const deleteUser=(req,res,next)=>{
+    var user_id = req.body.user_id
+
+    User.findOneAndRemove({user_id:user_id})
+    .then(user=>{
+        user.remove()
+        const resdata = {
+            "status": "OK",
+            "message": "Account Successfully delete",
+            "result": user
+        }
+        res.json(resdata)
+   })
+   .catch(err=>{
+    const resdata = {
+        "status": "ERROR",
+        "message": "Something went wrong ",
+        "result":"{}",
+        "error": err
+    }
+    res.json(resdata)
+   })
+}
 
 module.exports = {
     register,
@@ -328,5 +431,8 @@ module.exports = {
     userdetails,
     updateuser,
     updateimage,
-    verifyUser
+    verifyUser,
+    coverimage,
+    database,
+    deleteUser
 }

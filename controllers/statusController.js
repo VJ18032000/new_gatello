@@ -18,7 +18,8 @@ const createStatus = (req, res, next) => {
             const resdata = {
                 "status": "OK",
                 "message": "create status successfully",
-                "result": status
+                "result": status,
+                "error":"{}"
             }
             res.json(resdata)
         })
@@ -35,7 +36,8 @@ const createStatus = (req, res, next) => {
         const resdata = {
             "status": "ERROR",
             "message": "Please insert correctly",
-            "result":"{}"
+            "result":"{}",
+            "error":"{}"
         }
         res.json(resdata)
     }
@@ -51,7 +53,8 @@ const deletelStatus = (req, res, next) => {
         const resdata = {
             "status": "OK",
             "message": "status deleted successfully",
-            "result": status
+            "result": status,
+            "error":"{}"
         }
         res.json(resdata)
    })
@@ -118,7 +121,8 @@ const allstatusDetails=(req,res,next)=>{
         const resdata = {
             "status": "OK",
             "message": "All status viewed successfully",
-            "data": status
+            "data": status,
+            "error":"{}"
         }
         res.json(resdata)
     })
@@ -141,17 +145,18 @@ const statusDeails=(req,res,next)=>{
             const resdata = {
                 "status": "OK",
                 "message": "Status successfully Viewed", 
-                "result": status
+                "result": status,
+                "error":"{}"
             }
             res.json(resdata)
         }else{
             const resdata = {
                 "status": "ERROR",
-                "message": "Please Enter Valid Userid",
+                "message": "No status available",
+                "error":"{}"
             }
             res.json(resdata)
         }
-       
     })
     .catch(err => {
         const resdata = {
