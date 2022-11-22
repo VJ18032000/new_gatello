@@ -118,13 +118,18 @@ const userviewStatus = (req, res, next) => {
 const allstatusDetails=(req,res,next)=>{
     Status.find()
     .then(status=>{
-        const resdata = {
-            "status": "OK",
-            "message": "All status viewed successfully",
-            "data": status,
-            "error":"{}"
-        }
-        res.json(resdata)
+                const resdata = {
+                    "status": "OK",
+                    "message": "status",
+                    "result": {
+                        "status_details":{
+                            "user_id": status,
+                            "status_id":status,
+                        }
+                    },
+                    "error":"{}"
+                }
+                res.json(resdata)
     })
     .catch(err => {
         const resdata = {
