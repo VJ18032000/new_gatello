@@ -435,4 +435,4 @@ module.exports = {
     coverimage,
     database,
     deleteUser
-}
+} 

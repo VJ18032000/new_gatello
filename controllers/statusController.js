@@ -92,9 +92,12 @@ const userviewStatus = (req, res, next) => {
                 }
                 res.json(resdata)
             }
-            status.view_details.push(id)
-            status.save()
-            console.log("successfully Viewed")
+            if(status.user_id!==id){
+                status.view_details.push(id)
+                status.save()
+                console.log("successfully Viewed")
+            }
+           
             // if (status.view_details.indexOf(id) !== -1) {
             //     console.log("already Viewed")
             // } else {
@@ -108,7 +111,7 @@ const userviewStatus = (req, res, next) => {
                 "status": "ERROR",
                 "message": "Something went wrong",
                 "result":"{}",
-                "error": err
+                "error": err==={}?"please check status id":err
             }
             res.json(resdata)
            })
@@ -118,18 +121,13 @@ const userviewStatus = (req, res, next) => {
 const allstatusDetails=(req,res,next)=>{
     Status.find()
     .then(status=>{
-                const resdata = {
-                    "status": "OK",
-                    "message": "status",
-                    "result": {
-                        "status_details":{
-                            "user_id": status,
-                            "status_id":status,
-                        }
-                    },
-                    "error":"{}"
-                }
-                res.json(resdata)
+        const resdata = {
+            "status": "OK",
+            "message": "status",
+            "result":status!=0 ?status:"no status available",
+            "error":"{}"
+        }
+        res.json(resdata)
     })
     .catch(err => {
         const resdata = {
@@ -146,22 +144,13 @@ const statusDeails=(req,res,next)=>{
     var id = req.body.user_id
     Status.find({ user_id: id })
     .then(status=>{
-        if(status!=0){
             const resdata = {
-                "status": "OK",
-                "message": "Status successfully Viewed", 
-                "result": status,
-                "error":"{}"
+                "status": status!=0?"OK":"ERROR",
+                "message": status!=0?"Status successfully Viewed": "No status available", 
+                "result": status!=0?status:" ",
+                "error":status!=0?"":"Please check user_id"
             }
             res.json(resdata)
-        }else{
-            const resdata = {
-                "status": "ERROR",
-                "message": "No status available",
-                "error":"{}"
-            }
-            res.json(resdata)
-        }
     })
     .catch(err => {
         const resdata = {

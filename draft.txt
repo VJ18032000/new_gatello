@@ -1,0 +1,21 @@
+{
+            "status": "OK",
+            "message": "user details",
+            "result": {
+                "profile_details": {
+                    "_id": `${user.id}`,
+                    "user_id": `${user.user_id}`,
+                    "name": `${user.name}`,
+                    "profile_url": `${user.profile_url}`,
+                    "phone": `${user.phone}`,
+                    "dob": `${user.dob}`,
+                    "email": `${user.email}`,
+                    "username": `${user.username}`,
+                    "following_count": `${user.following_count}`,
+                    "followers_count": `${user.followers_count}`,
+                    "posts_count": `${user.posts_count}`
+                },
+                "isFollowing": true
+            },
+            "error": {}
+        }
