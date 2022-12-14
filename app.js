@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const url = "mongodb+srv://Gatello_Production:Cyb0SnTNNCWpGW2x@cluster0.wxn37.mongodb.net/test?authSource=admin&replicaSet=atlas-awavdn-shard-0&readPreference=primary&ssl=true"
+const url = "mongodb+srv://Gatello_Production:Cyb0SnTNNCWpGW2x@cluster0.wxn37.mongodb.net/gatello?authSource=admin&replicaSet=atlas-awavdn-shard-0&readPreference=primary&ssl=true"
 
 const app = express()
 const bodyParser=require('body-parser')
@@ -21,6 +21,7 @@ const PostRoute=require('./routes/post')
 const CommentRoute=require('./routes/comment')
 const StatusRoute=require('./routes/status')
 const LikeRoute=require('./routes/like')
+const UnRegister=require('./routes/unRegister')
 
 
 app.use('/', AuthRoute)
@@ -28,5 +29,6 @@ app.use('/', PostRoute)
 app.use('/',CommentRoute)
 app.use('/',StatusRoute)
 app.use('/',LikeRoute)
+app.use('/',UnRegister)
 
 app.listen(4000, () => console.log('server connection...4000'))

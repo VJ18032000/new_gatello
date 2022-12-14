@@ -1,4 +1,5 @@
 const Status = require('../models/statusPost')
+const User = require('../models/userModel')
 
 const createStatus = (req, res, next) => {
     const post = new Status({
@@ -6,38 +7,38 @@ const createStatus = (req, res, next) => {
         status_text: req.body.status_text,
         font_style: req.body.font_style,
         background_color: req.body.background_color,
-        font_color:req.body.font_color
+        font_color: req.body.font_color
     })
     if (req.file) {
         post.status_post = req.file.path
     }
     console.log(post.status_post)
-    if(post.status_text || post.status_post){
+    if (post.status_text || post.status_post) {
         post.save()
-        .then(status => {
-            const resdata = {
-                "status": "OK",
-                "message": "create status successfully",
-                "result": status,
-                "error":"{}"
-            }
-            res.json(resdata)
-        })
-        .catch(err => {
-            const resdata = {
-                "status": "ERROR",
-                "message": "Something went wrong",
-                "result":"{}",
-                "error": err
-            }
-            res.json(resdata)
-        })
-    }else{
+            .then(status => {
+                const resdata = {
+                    "status": "OK",
+                    "message": "create status successfully",
+                    "result": status,
+                    "error": "{}"
+                }
+                res.json(resdata)
+            })
+            .catch(err => {
+                const resdata = {
+                    "status": "ERROR",
+                    "message": "Something went wrong",
+                    "result": "{}",
+                    "error": err
+                }
+                res.json(resdata)
+            })
+    } else {
         const resdata = {
             "status": "ERROR",
             "message": "Please insert correctly",
-            "result":"{}",
-            "error":"{}"
+            "result": "{}",
+            "error": "{}"
         }
         res.json(resdata)
     }
@@ -47,26 +48,26 @@ const deletelStatus = (req, res, next) => {
     var id = req.body.status_id
     var user_id = req.body.user_id
 
-    Status.findOneAndRemove({$and :[{_id:id},{user_id:user_id}]})
-    .then(status=>{
-        status.remove()
-        const resdata = {
-            "status": "OK",
-            "message": "status deleted successfully",
-            "result": status,
-            "error":"{}"
-        }
-        res.json(resdata)
-   })
-   .catch(err=>{
-    const resdata = {
-        "status": "ERROR",
-        "message": "Please enter valid id",
-        "result":"{}",
-        "error": err
-    }
-    res.json(resdata)
-   })
+    Status.findOneAndRemove({ $and: [{ _id: id }, { user_id: user_id }] })
+        .then(status => {
+            status.remove()
+            const resdata = {
+                "status": "OK",
+                "message": "status deleted successfully",
+                "result": "{}",
+                "error": "{}"
+            }
+            res.json(resdata)
+        })
+        .catch(err => {
+            const resdata = {
+                "status": "ERROR",
+                "message": "Please enter valid id",
+                "result": "{}",
+                "error": `${err}`
+            }
+            res.json(resdata)
+        })
 }
 
 const userviewStatus = (req, res, next) => {
@@ -78,26 +79,26 @@ const userviewStatus = (req, res, next) => {
             if (status.status_post) {
                 const resdata = {
                     "status": "OK",
-                    "message": "status_post",
-                    "result": status,
-                    "error": {}
+                    "message": "status_post viewed succesfully",
+                    "result": "{}",
+                    "error": "{}"
                 }
                 res.json(resdata)
             } else {
                 const resdata = {
                     "status": "OK",
-                    "message": "status_text",
-                    "result": status,
-                    "error": {}
+                    "message": "status_text viewed successfully",
+                    "result": "{}",
+                    "error": "{}"
                 }
                 res.json(resdata)
             }
-            if(status.user_id!==id){
-                status.view_details.push(id)
+            if (status.user_id !== id) {
+                status.view_details.push({viewed_by:id,viewed_time:Date.now()})
                 status.save()
                 console.log("successfully Viewed")
             }
-           
+
             // if (status.view_details.indexOf(id) !== -1) {
             //     console.log("already Viewed")
             // } else {
@@ -110,57 +111,74 @@ const userviewStatus = (req, res, next) => {
             const resdata = {
                 "status": "ERROR",
                 "message": "Something went wrong",
-                "result":"{}",
-                "error": err==={}?"please check status id":err
+                "result": "{}",
+                "error": err === {} ? "please check status id" : `${err}`
             }
             res.json(resdata)
-           })
+        })
 
 }
 
-const allstatusDetails=(req,res,next)=>{
-    Status.find()
-    .then(status=>{
-        const resdata = {
-            "status": "OK",
-            "message": "status",
-            "result":status!=0 ?status:"no status available",
-            "error":"{}"
-        }
-        res.json(resdata)
-    })
+const allstatusDetails =  (req, res, next) => {
+        User.find()
+            .then(user1 => {
+            var user= []
+            for (var i = 0; i < user1.length; i++) {
+                Status.find({ user_id: user1[i].user_id })
+                    .then(result => {
+                        if (result != 0) {
+                            let user_id=result[0].user_id;
+                            user.push({[user_id]:result})
+                        }
+                    // console.log("inner User: "+user_id[user])
+                    }) 
+            }
+            setTimeout(() => {
+                const resdata = {
+                    "status": "OK",
+                    "message": "status",
+                    "result":user,
+                    "error":"{}"
+                }
+                res.json(resdata)
+            }, 1000); 
+            
+        })
     .catch(err => {
         const resdata = {
             "status": "ERROR",
             "message": "Something went wrong",
-            "result":"{}",
-            "error": err
+            "result": "{}",
+            "error": `${err}`
         }
         res.json(resdata)
-       })
+    })
+
+
+
 }
 
-const statusDeails=(req,res,next)=>{
+const statusDeails = (req, res, next) => {
     var id = req.body.user_id
     Status.find({ user_id: id })
-    .then(status=>{
+        .then(status => {
             const resdata = {
-                "status": status!=0?"OK":"ERROR",
-                "message": status!=0?"Status successfully Viewed": "No status available", 
-                "result": status!=0?status:" ",
-                "error":status!=0?"":"Please check user_id"
+                "status": status != 0 ? "OK" : "ERROR",
+                "message": status != 0 ? "Status successfully Viewed" : "No status available",
+                "result": status != 0 ? status : "{}",
+                "error": status != 0 ? `{}` : "Please check user_id"
             }
             res.json(resdata)
-    })
-    .catch(err => {
-        const resdata = {
-            "status": "ERROR",
-            "message": "Something went wrong",
-            "result":"{}",
-            "error": err
-        }
-        res.json(resdata)
-    })
+        })
+        .catch(err => {
+            const resdata = {
+                "status": "ERROR",
+                "message": "Something went wrong",
+                "result": "{}",
+                "error": `${err}`
+            }
+            res.json(resdata)
+        })
 }
 
 module.exports = {

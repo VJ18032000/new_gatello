@@ -13,10 +13,17 @@ const statusSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    view_details: {
-        type: Array,
-        required: true
-    },
+    view_details: [{
+        viewed_by:{
+            type: String,
+            required: true
+        },
+        viewed_time:{
+            type: Date,
+            required:false
+        }
+       
+    }],
     font_style:{
         type: String,
         required:false

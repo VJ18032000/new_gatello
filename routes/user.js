@@ -18,6 +18,7 @@ router.post('/update/coverPic', cover.single('cover_url'),AuthController.coverim
 router.post('/verify/user', AuthController.verifyUser)
 router.post('/database', AuthController.database)
 router.delete('/user/delete', AuthController.deleteUser)
+router.post('/view/profile', AuthController.viewProfile)
 
 
 module.exports = router

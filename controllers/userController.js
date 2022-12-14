@@ -185,24 +185,45 @@ const editprofile=(req,res,next)=>{
         website:req.body.website,
         skills:req.body.skills,
         ...work_experience
-}
+    }
     User.updateMany({user_id},{$set:user})
-    .then(result=>{
-        const resdata={
-            "status": "OK",
-            "message": "profile details updated successfully",
-            "result": {result},
-            "error": {}
+    .then(result=>{  
+        if(result.modifiedCount){
+            const resdata={
+                "status": "OK",
+                "message": "profile details updated successfully",
+                "result": {},
+                "error": {}
+            }
+            res.send(resdata)
         }
-        res.send(resdata)
+        else if(result.acknowledged===false){
+            const resdata={
+                "status": "ERROR",
+                "message": "Something went wrong",
+                "result": {},
+                "error": "validation error"
+            }
+            res.send(resdata)
+        }
+        else{
+            const resdata={
+                "status": "OK",
+                "message": "Already exists!",
+                "result": {},
+                "error": {}
+            }
+            res.send(resdata)
+        }
+
     }).catch(err=>{
         const resdata={
             "status": "ERROR",
             "message": "Something went wrong",
             "result": {},
-            "error": {err}
+            "error": "{}"
         }
-        res.send(err)
+        res.send(resdata)
     })
 }
 
@@ -421,6 +442,29 @@ const deleteUser=(req,res,next)=>{
     res.json(resdata)
    })
 }
+const viewProfile=(req,res,next)=>{
+    var user_id = req.body.user_id
+    User.find({user_id:user_id})
+    .then(result=>{
+        const resdata = {
+            "status": "OK",
+            "message": "user details",
+            "result": {"profile_details":result[0],"isFollowing":false},
+            "error":{}
+        }
+        res.json(resdata)
+    })
+    .catch(err=>{
+        const resdata = {
+            "status": "ERROR",
+            "message": "Something went wrong ",
+            "result":"{}",
+            "error": err
+        }
+        res.json(resdata)
+       })
+}
+
 
 module.exports = {
     register,
@@ -434,5 +478,6 @@ module.exports = {
     verifyUser,
     coverimage,
     database,
-    deleteUser
+    deleteUser,
+    viewProfile
 } 
